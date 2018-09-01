@@ -33,7 +33,7 @@ public class Main {
                 }
 
             }
-            if (userlost == true) {
+            if (userlost) {
                 System.out.println("Вы проиграли");
             }
 
