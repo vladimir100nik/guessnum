@@ -10,8 +10,8 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Хочешь начать игру? Y/N");
         String answer = scan.next();
-        while (answer.equals("y")) {
 
+        do {
 
             int myNum = rand.nextInt(100) + 1;
             System.out.println(myNum);
@@ -20,11 +20,11 @@ public class Main {
             boolean userlost = true;
             for (int i = 1; i <= 5; i++) {
                 System.out.println("Попытка N" + i);
-                int usernum = scan.nextInt();
+                int userNum = askNum();
 
-                if (usernum < myNum) {
+                if (userNum < myNum) {
                     System.out.println("Ваше число меньше!");
-                } else if (usernum > myNum) {
+                } else if (userNum > myNum) {
                     System.out.println("Ваше число больше!");
                 } else {
                     System.out.println("Вы угадали!!!");
@@ -34,13 +34,45 @@ public class Main {
 
             }
             if (userlost) {
-                System.out.println("Вы проиграли");
+                System.out.println("Вы проиграли!");
             }
 
-        System.out.println("Хочешь повторить? Y/N");
-        answer = scan.next();
+            System.out.println("Хочешь повторить? Y/N");
+            answer = askYN();
+            //  answer = scan.next();
+
+        } while (answer.equals("y"));
     }
+
+    static String askYN() {
+        String answer;
+        do {
+            answer = scan.next();
+
+            if (!answer.equals("y") && !answer.equals("n")) {
+                System.out.println("Y или N");
+                continue;
+            } else {
+                return answer;
+            }
+        } while (true);
+
+
+    }
+
+    static int askNum() {
+        int answer;
+        do {
+            answer = scan.nextInt();
+
+            if (answer < 1 || answer > 100) {
+                System.out.println("Вы ввели неверное число");
+
+            } else {
+                return answer;
+            }
+
+        } while (true);
         }
-    }
 
-
+}
