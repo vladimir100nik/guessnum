@@ -1,5 +1,6 @@
 package lv.tsi.java;
 
+import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -12,11 +13,8 @@ public class Main {
         String answer = scan.next();
 
         do {
-
             int myNum = rand.nextInt(100) + 1;
             System.out.println(myNum);
-
-
             boolean userlost = true;
             for (int i = 1; i <= 5; i++) {
                 System.out.println("Попытка N" + i);
@@ -31,7 +29,6 @@ public class Main {
                     userlost = false;
                     break;
                 }
-
             }
             if (userlost) {
                 System.out.println("Вы проиграли!");
@@ -63,8 +60,13 @@ public class Main {
     static int askNum() {
         int answer;
         do {
-            answer = scan.nextInt();
-
+            try {
+                answer = scan.nextInt();
+            } catch (InputMismatchException e) {                           //e - название переменной для записи ошибок
+                System.out.println("Это не число!");
+                scan.next();
+                continue;
+            }
             if (answer < 1 || answer > 100) {
                 System.out.println("Вы ввели неверное число");
 
@@ -73,6 +75,6 @@ public class Main {
             }
 
         } while (true);
-        }
+    }
 
 }
