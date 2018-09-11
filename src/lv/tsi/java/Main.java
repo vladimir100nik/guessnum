@@ -1,18 +1,24 @@
 package lv.tsi.java;
 
-import java.util.InputMismatchException;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     static Random rand = new Random();
     static Scanner scan = new Scanner(System.in);
+    static List<GamesResult> results = new ArrayList<>();
 
     public static void main(String[] args) {
-        System.out.println("Хочешь начать игру? Y/N");
-        String answer = scan.next();
+
+        String answer;
 
         do {
+            System.out.println("Введите ваше имя:");
+            String yourName = scan.next();
+            System.out.println("Привет " + yourName + " хочешь начать игру? Y/N");
+
+
+
+            long t1 = System.currentTimeMillis();
             int myNum = rand.nextInt(100) + 1;
             System.out.println(myNum);
             boolean userlost = true;
@@ -27,6 +33,14 @@ public class Main {
                 } else {
                     System.out.println("Вы угадали!!!");
                     userlost = false;
+                    GamesResult r = new GamesResult();
+                    r.name = yourName;
+                    r.triesCount = i;
+                    results.add(r);
+                    long t2 = System.currentTimeMillis();
+                    r.userTime = (t2 - t1) / 1000;
+
+
                     break;
                 }
             }
@@ -39,6 +53,19 @@ public class Main {
             //  answer = scan.next();
 
         } while (answer.equals("y"));
+
+
+        showResults();
+    }
+
+
+
+    private static void showResults() {
+
+        for (GamesResult r : results) {
+            System.out.println(r.name + " вы угадали с " + r.triesCount + " попытки " + r.userTime + "сек.");
+        }
+
     }
 
     static String askYN() {
