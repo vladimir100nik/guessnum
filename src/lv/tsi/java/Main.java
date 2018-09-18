@@ -1,5 +1,8 @@
 package lv.tsi.java;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 public class Main {
@@ -8,14 +11,13 @@ public class Main {
     static List<GamesResult> results = new ArrayList<>();
 
     public static void main(String[] args) {
-
+        loadResults();
         String answer;
 
         do {
             System.out.println("Введите ваше имя:");
             String yourName = scan.next();
-            System.out.println("Привет " + yourName + " хочешь начать игру? Y/N");
-
+            //System.out.println("Привет " + yourName + " хочешь начать игру? Y/N");
 
 
             long t1 = System.currentTimeMillis();
@@ -37,8 +39,10 @@ public class Main {
                     r.name = yourName;
                     r.triesCount = i;
                     results.add(r);
+                    results.sort(Comparator.<GamesResult>comparingInt(r0 -> r0.triesCount)
+                            .thenComparing(r0 -> r0.userTime));
                     long t2 = System.currentTimeMillis();
-                    r.userTime = (t2 - t1) / 1000;
+                    r.userTime = (t2 - t1);
 
 
                     break;
@@ -56,15 +60,61 @@ public class Main {
 
 
         showResults();
+        saveResult();
+
     }
 
+    private static void loadResults() {
+        File file = new File("top_scores.txt");
+        try (Scanner in = new Scanner(file)) {
+            while (in.hasNext()) {
+                GamesResult result = new GamesResult();
+                result.name = in.next();
+                result.triesCount = in.nextInt();
+                result.userTime = in.nextLong();
+                results.add(result);
+            }
+        } catch (IOException e) {
+            System.out.println("Cannot load from file");
+        }
 
+    }
+
+    private static void saveResult() {
+
+        File file = new File("top_scores.txt");
+        try (PrintWriter out = new PrintWriter(file)) {
+            for (GamesResult r : results) {
+                out.printf("%s %d %d\n", r.name, r.triesCount, r.userTime);
+            }
+        } catch (IOException e) {
+            System.out.println("Cannot save to file");
+        }
+
+    }
+
+//
+//    private static void showResults() {
+//        int count = Math.min(5, results.size());
+//        for (int i = 0; i < count; i++) {
+////            if (results.size() < 10) {
+////                count = results.size();
+////            }
+//            GamesResult r = results.get(i);
+//            System.out.printf("%s - %d - %d sec\n", r.name, r.triesCount, r.userTime);
+//
+//        }
+//    }
 
     private static void showResults() {
+        results.stream()
+//                .sorted(Comparator.<GamesResult>comparingInt(r -> r.triesCount)
+//                        .thenComparing(r -> r.userTime))
 
-        for (GamesResult r : results) {
-            System.out.println(r.name + " вы угадали с " + r.triesCount + " попытки " + r.userTime + "сек.");
-        }
+                .limit(5)
+                .forEach(r -> {
+                    System.out.printf("%s - %d - %d sec\n", r.name, r.triesCount, r.userTime);
+                });
 
     }
 
