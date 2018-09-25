@@ -107,15 +107,27 @@ public class Main {
 //    }
 
     private static void showResults() {
-        results.stream()
-//                .sorted(Comparator.<GamesResult>comparingInt(r -> r.triesCount)
-//                        .thenComparing(r -> r.userTime))
+        int maxLen = findMaxNameLen();
 
+        results.stream()
                 .limit(5)
                 .forEach(r -> {
-                    System.out.printf("%s - %d - %d sec\n", r.name, r.triesCount, r.userTime);
+                    System.out.print(r.name);
+                    for (int i = 0; i < (maxLen - r.name.length()); i++) {
+                        System.out.print("_");
+                    }
+                    System.out.printf("%d - %.2fsec\n", r.triesCount, r.userTime / 1000.0);
                 });
+    }
 
+    private static int findMaxNameLen() {
+
+
+        return results.stream()
+                .map(r -> r.name)
+                .map(n -> n.length())
+                .max(Comparator.naturalOrder())
+                .get();
     }
 
     static String askYN() {
